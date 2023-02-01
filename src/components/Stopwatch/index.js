@@ -2,20 +2,24 @@ import {Component} from 'react'
 import './index.css'
 
 class Stopwatch extends Component {
-  state = {timer: 0}
+  state = {timer: 0, isTimeRunning: false}
 
   handleStart = () => {
     this.timerId = setInterval(this.tick, 1000)
+    this.setState({isTimeRunning: true})
   }
 
-  handleStop = () => clearTimeout(this.timerId)
+  handleStop = () => {
+    this.setState({isTimeRunning: false})
+    clearTimeout(this.timerId)
+  }
 
-  handleReset = () => this.setState({timer: 0})
+  handleReset = () => this.setState({timer: 0, isTimeRunning: false})
 
   tick = () => this.setState(prevState => ({timer: prevState.timer + 1}))
 
   render() {
-    const {timer} = this.state
+    const {timer, isTimeRunning} = this.state
 
     const minutes = Math.floor(timer / 60)
     const seconds = timer % 60
@@ -39,7 +43,11 @@ class Stopwatch extends Component {
             {seconds < 10 ? `0${seconds}` : seconds}
           </h1>
           <div className="button-container">
-            <button type="button" onClick={this.handleStart}>
+            <button
+              type="button"
+              onClick={this.handleStart}
+              disabled={isTimeRunning}
+            >
               Start
             </button>
             <button type="button" onClick={this.handleStop}>
