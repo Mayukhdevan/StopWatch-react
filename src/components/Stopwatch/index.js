@@ -3,7 +3,11 @@ import './index.css'
 
 class Stopwatch extends Component {
   state = {timer: 0, isTimeRunning: false}
-
+  
+  componentWillUnmount() {
+    clearTimeout(this.timerId)
+  }
+  
   handleStart = () => {
     this.timerId = setInterval(this.tick, 1000)
     this.setState({isTimeRunning: true})
